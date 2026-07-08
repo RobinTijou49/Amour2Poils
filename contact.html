@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact — Amour 2 Poils</title>
+    <meta
+      name="description"
+      content="Contactez-nous pour une pension, du petsitting ou un accompagnement en éducation canine positive."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a href="index.html" class="logo"
+          ><span class="paw">🐾</span> Amour 2 Poils
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="pension.html">Pension</a></li>
+          <li><a href="education.html">Éducation positive</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+          <li class="nav-cta">
+            <a href="contact.html" class="btn btn-primary">Prendre contact</a>
+          </li>
+        </ul>
+        <button class="nav-toggle" aria-label="Ouvrir le menu">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero page-hero">
+        <div
+          class="hero-bg"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1600&q=80&quot;);
+          "
+        ></div>
+        <div class="hero-content">
+          <p class="eyebrow">✉️ Contact</p>
+          <h1>Parlons de votre compagnon</h1>
+          <p>
+            Une question, une envie de réserver une pension ou de démarrer des
+            séances d'éducation ? Nous vous répondons avec plaisir.
+          </p>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section>
+        <div class="container">
+          <div class="contact-grid">
+            <!-- FORMULAIRE -->
+            <div>
+              <div class="contact-form">
+                <h2 style="margin-bottom: 24px">Envoyez-nous un message</h2>
+
+                <div class="form-success" id="form-success">
+                  Merci pour votre message ! Nous revenons vers vous très
+                  rapidement. 🐾
+                </div>
+
+                <form id="contact-form" novalidate>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="name">Nom complet *</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Votre nom"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="phone">Téléphone *</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="06 12 34 56 78"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="vous@email.com"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="service">Service souhaité *</label>
+                    <select id="service" name="service" required>
+                      <option value="" selected disabled>
+                        Sélectionnez un service
+                      </option>
+                      <option value="pension-domicile">Garde à domicile</option>
+                      <option value="pension-familiale">
+                        Pension familiale
+                      </option>
+                      <option value="petsitting">Promenade / Petsitting</option>
+                      <option value="cours-particulier">
+                        Cours particulier d'éducation
+                      </option>
+                      <option value="cours-collectif">Cours collectif</option>
+                      <option value="puppy-class">Puppy class</option>
+                      <option value="reeducation">
+                        Rééducation comportementale
+                      </option>
+                      <option value="autre">Autre demande</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="message">Votre message *</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      placeholder="Parlez-nous de votre chien : race, âge, besoins, dates envisagées..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Envoyer le message
+                  </button>
+                  <p class="form-note">
+                    Les champs marqués d'un * sont obligatoires. Réponse sous 24
+                    à 48h.
+                  </p>
+                </form>
+              </div>
+            </div>
+
+            <!-- COORDONNEES -->
+            <div>
+              <div class="contact-info-card">
+                <h3>Nos coordonnées</h3>
+
+                <div class="contact-detail">
+                  <div class="icon">📍</div>
+                  <div>
+                    <strong>Adresse</strong>
+                    <span>7 rue du haut bourg, 49320 Coutures</span>
+                  </div>
+                </div>
+
+                <div class="contact-detail">
+                  <div class="icon">📞</div>
+                  <div>
+                    <strong>Téléphone</strong>
+                    <span>00 00 00 00 00</span>
+                  </div>
+                </div>
+
+                <div class="contact-detail">
+                  <div class="icon">✉️</div>
+                  <div>
+                    <strong>Email</strong>
+                    <span>contact@amour2poils.fr</span>
+                  </div>
+                </div>
+
+                <div class="contact-detail">
+                  <div class="icon">🕐</div>
+                  <div>
+                    <strong>Horaires</strong>
+                    <span
+                      >Lun - Ven : 9h - 19h<br />Sam : 9h - 13h<br />Dim :
+                      fermé</span
+                    >
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 28px">Suivez-nous</h3>
+                <div class="social-links">
+                  <a href="#" aria-label="Facebook">📘</a>
+                  <a href="#" aria-label="Instagram">📷</a>
+                  <a href="#" aria-label="TikTok">🎵</a>
+                </div>
+              </div>
+
+              <div class="map-embed">
+                <iframe
+                  src="https://www.google.com/maps?q=49320+Coutures,+France&output=embed"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Localisation Amour 2 Poils"
+                >
+                </iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <div class="footer-logo">
+              <span class="paw">🐾</span> Amour 2 Poils
+            </div>
+            <p>
+              Éducation canine positive et pension/petsitting pour chiens, dans
+              la bienveillance et le respect de l'animal.
+            </p>
+            <div class="footer-social">
+              <a href="#" aria-label="Facebook">📘</a>
+              <a href="#" aria-label="Instagram">📷</a>
+              <a href="#" aria-label="TikTok">🎵</a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="index.html">Accueil</a></li>
+              <li><a href="pension.html">Pension</a></li>
+              <li><a href="education.html">Éducation positive</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="pension.html">Garde à domicile</a></li>
+              <li><a href="pension.html">Pension familiale</a></li>
+              <li><a href="education.html">Cours particuliers</a></li>
+              <li><a href="education.html">Puppy classes</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <p>7 rue du haut bourg<br />49320 Coutures</p>
+            <p>00 00 00 00 00<br />contact@amour2poils.fr</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          &copy; <span id="current-year"></span> Amour 2 Poils — Tous droits
+          réservés.
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
