@@ -122,32 +122,67 @@ Pour un autre prestataire (Brevo, Postmark, SMTP…), seule la fonction
 
 ## Déploiement
 
-`npm run build` produit deux dossiers :
+Le site est hébergé sur **Vercel**, connecté à ce dépôt GitHub : chaque push
+sur `main` déclenche un déploiement.
 
-- `dist/client/` — les pages statiques et les images optimisées ;
-- `dist/server/` — le serveur Node qui traite `/api/contact`.
+`npm run build` produit un dossier `.vercel/output/` contenant les pages
+statiques d'un côté, et une fonction serverless pour `/api/contact` de l'autre.
 
-Le projet utilise l'adaptateur `@astrojs/node` en mode `standalone`, qui
-fonctionne sur n'importe quel hébergement Node :
+### Mise en place initiale
+
+1. Sur [vercel.com](https://vercel.com), créez un compte et connectez-le à
+   GitHub.
+2. **Add New → Project**, puis importez `RobinTijou49/Amour2Poils`.
+   Le préréglage Astro est détecté automatiquement : ne changez ni la commande
+   de build, ni le dossier de sortie.
+3. Dans **Settings → Environment Variables**, ajoutez les variables du
+   formulaire (voir `.env.example`). Elles sont facultatives : sans elles, le
+   site se déploie et le formulaire valide les messages sans les envoyer.
+4. Déployez.
+
+Tant qu'aucun domaine personnalisé n'est branché, `SITE_URL` peut rester vide :
+la configuration retombe sur le domaine de production fourni par Vercel, ce qui
+suffit pour des URL canoniques et un sitemap corrects.
+
+### Brancher le domaine définitif
+
+1. **Settings → Domains**, ajoutez `www.amour2poils.fr` et suivez les
+   enregistrements DNS indiqués.
+2. Ajoutez la variable `SITE_URL=https://www.amour2poils.fr`.
+3. Redéployez, pour que le sitemap et les URL canoniques soient régénérés.
+
+### En-têtes de sécurité
+
+L'adaptateur Vercel génère sa propre configuration de routage
+(`.vercel/output/config.json`), et un `vercel.json` y serait **ignoré sans
+avertissement**. Les en-têtes sont donc injectés par
+`scripts/apply-security-headers.mjs`, exécuté à la fin de `npm run build`.
+
+Après un déploiement, vérifiez qu'ils sont bien servis :
 
 ```bash
-npm run build
-SITE_URL="https://www.amour2poils.fr" RESEND_API_KEY="..." npm start
+curl -sI https://votre-site.vercel.app | grep -i "x-content-type\|referrer-policy\|x-frame"
 ```
 
-Pour déployer sur une plateforme dédiée, remplacez l'adaptateur dans
-`astro.config.mjs` par `@astrojs/netlify`, `@astrojs/vercel` ou
-`@astrojs/cloudflare`. Rien d'autre ne change.
+### Changer d'hébergeur
 
-Pensez à définir `SITE_URL` : cette variable alimente l'URL canonique, les
-balises de partage et le sitemap.
+Seul l'adaptateur de `astro.config.mjs` est à remplacer (`@astrojs/netlify`,
+`@astrojs/cloudflare`, `@astrojs/node`…). Le code du site ne change pas.
+`scripts/apply-security-headers.mjs` est spécifique à Vercel : il se désactive
+tout seul si `.vercel/output/config.json` n'existe pas.
+
+> **À savoir sur le plan gratuit.** Les conditions du plan Hobby de Vercel
+> réservent son usage à des projets **non commerciaux**. Amour 2 Poils étant
+> une entreprise, un passage au plan payant ou un changement d'hébergeur
+> (Cloudflare Pages et Netlify autorisent l'usage commercial sur leur offre
+> gratuite) peut devenir nécessaire.
 
 ### Hébergement 100 % statique
 
-Si l'hébergement ne permet pas d'exécuter Node, il reste possible de servir
-uniquement `dist/client/` et de confier le formulaire à un service externe
-(Formspree, Netlify Forms…). Il faut alors changer l'attribut `action` du
-formulaire et retirer l'adaptateur de `astro.config.mjs`.
+Si l'hébergement ne permet pas d'exécuter du code serveur, il reste possible de
+servir uniquement les fichiers statiques et de confier le formulaire à un
+service externe (Formspree, Netlify Forms…). Il faut alors changer l'attribut
+`action` du formulaire et retirer l'adaptateur de `astro.config.mjs`.
 
 ## Choix techniques
 
@@ -171,6 +206,7 @@ Quelques décisions qui méritent une explication :
 - Remplacer les photos Unsplash par les vraies photos de l'entreprise.
 - Renseigner le vrai numéro de téléphone dans `src/data/site.ts`.
 - Renseigner les URL des réseaux sociaux (elles pointent encore sur `#`).
+- Brancher le domaine `amour2poils.fr` (voir « Déploiement »).
 - Ajouter une image de partage `public/og-image.jpg` (1200 × 630 px).
 - Ajouter les mentions légales et la politique de confidentialité, obligatoires
   pour un site professionnel français.

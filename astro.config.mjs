@@ -1,18 +1,35 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
-import node from "@astrojs/node";
+import vercel from "@astrojs/vercel";
 import sitemap from "@astrojs/sitemap";
 
 /**
+ * URL canonique du site.
+ *
+ * Ordre de priorité :
+ *  1. `SITE_URL`, à définir quand le domaine définitif est branché ;
+ *  2. le domaine de production fourni par Vercel, pour que les URL
+ *     canoniques et le sitemap soient corrects dès le premier déploiement
+ *     sans rien configurer ;
+ *  3. localhost, en développement.
+ */
+const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const site =
+  process.env.SITE_URL ??
+  (productionUrl ? `https://${productionUrl}` : "http://localhost:4321");
+
+/**
  * Le site est statique par défaut (`output: "static"`).
- * Seule la route `/api/contact` est rendue à la demande via `export const prerender = false`,
- * ce qui impose un adaptateur. `@astrojs/node` est volontairement neutre : pour déployer
- * ailleurs, remplacez-le par @astrojs/netlify, @astrojs/vercel ou @astrojs/cloudflare.
+ * Seule la route `/api/contact` est rendue à la demande via
+ * `export const prerender = false`, ce qui impose un adaptateur.
+ *
+ * Pour changer d'hébergeur, seul cet adaptateur est à remplacer
+ * (@astrojs/netlify, @astrojs/cloudflare, @astrojs/node…).
  */
 export default defineConfig({
-  site: process.env.SITE_URL ?? "https://www.amour2poils.fr",
+  site,
   output: "static",
-  adapter: node({ mode: "standalone" }),
+  adapter: vercel(),
   integrations: [
     sitemap({
       // Pages techniques : sans intérêt dans les résultats de recherche.

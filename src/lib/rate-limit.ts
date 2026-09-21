@@ -1,8 +1,16 @@
 /**
  * Limitation de débit en mémoire : au plus N soumissions par IP et par
- * fenêtre glissante. Suffisant pour freiner les robots sur un site vitrine
- * mono-instance. Derrière plusieurs instances ou en environnement
- * « serverless », remplacer par un stockage partagé (Redis, Upstash…).
+ * fenêtre glissante.
+ *
+ * Portée réelle sur l'hébergement actuel (Vercel, fonctions serverless) :
+ * la mémoire n'est partagée ni entre instances, ni dans le temps, puisque
+ * les instances sont recyclées. Le compteur freine donc les rafales qui
+ * tombent sur une instance déjà chaude, mais il ne constitue pas une
+ * barrière fiable — c'est le piège à robots du formulaire qui fait le
+ * gros du travail anti-spam.
+ *
+ * Pour une vraie garantie, brancher un stockage partagé (Upstash Redis,
+ * Vercel KV) : seule l'implémentation de `checkRateLimit` change.
  */
 
 type Bucket = { count: number; resetAt: number };
