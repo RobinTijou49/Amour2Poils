@@ -1,0 +1,99 @@
+---
+/**
+ * Témoignage client.
+ * La note est rendue en étoiles visuelles doublées d'un texte lisible
+ * par les lecteurs d'écran (« 5 étoiles sur 5 »).
+ */
+import type { Testimonial } from "@/data/home";
+
+interface Props {
+  testimonial: Testimonial;
+}
+
+const { testimonial } = Astro.props;
+const initial = testimonial.author.charAt(0).toUpperCase();
+---
+
+<li class="testimonial">
+  <figure>
+    <p class="testimonial__stars">
+      <span aria-hidden="true">{"★".repeat(testimonial.rating)}</span>
+      <span class="visually-hidden">
+        Note : {testimonial.rating} étoiles sur 5
+      </span>
+    </p>
+
+    <blockquote class="testimonial__quote">
+      <p>{testimonial.quote}</p>
+    </blockquote>
+
+    <figcaption class="testimonial__author">
+      <span class="testimonial__avatar" aria-hidden="true">
+        {initial}
+      </span>
+      <span>
+        <strong>{testimonial.author}</strong>
+        <span class="testimonial__role">{testimonial.role}</span>
+      </span>
+    </figcaption>
+  </figure>
+</li>
+
+<style>
+  .testimonial {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .testimonial__stars {
+    color: var(--color-brown);
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+  }
+
+  .testimonial__quote {
+    color: var(--color-text-light);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .testimonial__quote p::before {
+    content: "« ";
+  }
+
+  .testimonial__quote p::after {
+    content: " »";
+  }
+
+  .testimonial__author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .testimonial__avatar {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--color-bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-sage-dark);
+  }
+
+  .testimonial__author strong {
+    font-family: var(--font-heading);
+    display: block;
+  }
+
+  .testimonial__role {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+  }
+</style>

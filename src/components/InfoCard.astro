@@ -1,0 +1,50 @@
+---
+/** Carte de prestation : icône, titre, description. */
+interface Props {
+  icon: string;
+  title: string;
+}
+
+const { icon, title } = Astro.props;
+---
+
+<li class="info-card">
+  <p class="info-card__icon" aria-hidden="true">
+    {icon}
+  </p>
+  <h3>{title}</h3>
+  <p>
+    <slot />
+  </p>
+</li>
+
+<style>
+  .info-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 34px 28px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    border-top: 4px solid var(--color-sage);
+  }
+
+  .info-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-soft-hover);
+  }
+
+  .info-card__icon {
+    font-size: 1.8rem;
+    margin-bottom: 14px;
+  }
+
+  .info-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .info-card p:not(.info-card__icon) {
+    color: var(--color-text-light);
+    font-size: 0.96rem;
+  }
+</style>

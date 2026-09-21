@@ -1,0 +1,95 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import Section from "@/components/Section.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import Split from "@/components/Split.astro";
+import FeatureList from "@/components/FeatureList.astro";
+import InfoCard from "@/components/InfoCard.astro";
+import Steps from "@/components/Steps.astro";
+import Gallery from "@/components/Gallery.astro";
+import CtaBanner from "@/components/CtaBanner.astro";
+
+import { prestations, benefits, methodFeatures } from "@/data/education";
+import { educationGallery } from "@/data/galleries";
+
+import heroImage from "@/assets/images/education-seance.jpg";
+import methodeImage from "@/assets/images/education-apprentissage.jpg";
+---
+
+<BaseLayout
+  title="Éducation positive"
+  description="Cours particuliers, collectifs, puppy classes et rééducation comportementale, basés sur le renforcement positif et le respect du chien."
+>
+  <Hero
+    image={heroImage}
+    imageAlt="Éducatrice canine travaillant avec un chien attentif"
+    eyebrow="🎾 Éducation canine positive"
+    title="Apprendre ensemble, dans la confiance et la douceur"
+  >
+    <p>
+      Une méthode bienveillante, sans coercition, pour construire une relation
+      harmonieuse avec votre chien, à chaque étape de sa vie.
+    </p>
+  </Hero>
+
+  <Section>
+    <Split
+      eyebrow="Notre méthode"
+      title="Qu'est-ce que l'éducation positive ?"
+      image={methodeImage}
+      imageAlt="Chien récompensé d'une friandise après un exercice réussi"
+    >
+      <p>
+        L'éducation positive s'appuie sur le renforcement des comportements
+        souhaités plutôt que sur la punition des comportements indésirables.
+        Récompenses, encouragements et jeu permettent au chien d'apprendre avec
+        plaisir, en toute confiance.
+      </p>
+      <p>
+        Aucune méthode coercitive n'est utilisée : pas de colliers étrangleurs,
+        électriques ou à pointes, pas de rapport de force. Nous observons le
+        langage corporel du chien pour comprendre ses émotions et adapter notre
+        accompagnement.
+      </p>
+      <FeatureList items={methodFeatures} />
+    </Split>
+  </Section>
+
+  <Section alt>
+    <SectionHead
+      eyebrow="Nos prestations"
+      title="Un accompagnement pour chaque besoin"
+    />
+
+    <ul class="grid grid--3">
+      {prestations.map((prestation) => (
+        <InfoCard icon={prestation.icon} title={prestation.title}>
+          {prestation.text}
+        </InfoCard>
+      ))}
+    </ul>
+  </Section>
+
+  <Section>
+    <SectionHead
+      eyebrow="Pourquoi choisir l'éducation positive"
+      title="Des bénéfices pour le chien... et pour vous"
+    />
+    <Steps items={benefits} />
+  </Section>
+
+  <Section alt>
+    <SectionHead eyebrow="En images" title="Nos séances d'éducation" />
+    <Gallery items={educationGallery} />
+  </Section>
+
+  <Section>
+    <CtaBanner
+      title="Prêt(e) à démarrer l'aventure avec votre chien ?"
+      text="Prenez rendez-vous pour un premier bilan et construisons ensemble un programme adapté."
+      ctaLabel="Prendre rendez-vous"
+      ctaHref="/contact"
+    />
+  </Section>
+</BaseLayout>

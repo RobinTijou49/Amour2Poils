@@ -1,0 +1,57 @@
+---
+/** Carte « valeur » : pastille d'icône, titre, texte. */
+interface Props {
+  icon: string;
+  title: string;
+}
+
+const { icon, title } = Astro.props;
+---
+
+<li class="value-card">
+  <p class="value-card__icon" aria-hidden="true">
+    {icon}
+  </p>
+  <h3>{title}</h3>
+  <p>
+    <slot />
+  </p>
+</li>
+
+<style>
+  .value-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+  }
+
+  .value-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-soft-hover);
+  }
+
+  .value-card__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--color-bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+  }
+
+  .value-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+
+  .value-card p:not(.value-card__icon) {
+    color: var(--color-text-light);
+    font-size: 0.97rem;
+  }
+</style>

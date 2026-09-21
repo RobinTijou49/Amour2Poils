@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /merci
+
+Sitemap: https://www.amour2poils.fr/sitemap-index.xml

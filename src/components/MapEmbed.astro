@@ -1,0 +1,105 @@
+---
+/**
+ * Carte de localisation en « clic pour charger ».
+ *
+ * L'iframe Google Maps n'est insérée qu'après un clic explicite du visiteur :
+ * sans cela, le simple affichage de la page enverrait son adresse IP à Google,
+ * ce qui suppose un consentement préalable (RGPD). Un lien de repli permet
+ * d'ouvrir l'itinéraire dans un nouvel onglet, y compris sans JavaScript.
+ */
+import { contact } from "@/data/site";
+
+const query = encodeURIComponent(contact.mapQuery);
+const embedSrc = `https://www.google.com/maps?q=${query}&output=embed`;
+const externalHref = `https://www.google.com/maps/search/?api=1&query=${query}`;
+---
+
+<div class="map" data-embed-src={embedSrc}>
+  <div class="map__placeholder">
+    <p class="map__icon" aria-hidden="true">
+      🗺️
+    </p>
+    <p class="map__text">
+      La carte est fournie par Google Maps. L'afficher enverra votre adresse IP
+      à Google.
+    </p>
+    <button type="button" class="btn btn--secondary map__button">
+      Afficher la carte
+    </button>
+    <p class="map__fallback">
+      <a href={externalHref} target="_blank" rel="noopener noreferrer">
+        Ouvrir dans Google Maps
+        <span class="visually-hidden">(nouvelle fenêtre)</span>
+      </a>
+    </p>
+  </div>
+</div>
+
+<script>
+  for (const map of document.querySelectorAll<HTMLElement>(".map")) {
+    const button = map.querySelector<HTMLButtonElement>(".map__button");
+    const src = map.dataset.embedSrc;
+    if (!button || !src) continue;
+
+    button.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.title = "Carte de localisation d'Amour 2 Poils";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer";
+      iframe.allowFullscreen = true;
+      map.replaceChildren(iframe);
+    });
+  }
+</script>
+
+<style>
+  .map {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    height: 320px;
+    background: var(--color-bg-alt);
+  }
+
+  .map :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .map__placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .map__icon {
+    font-size: 2rem;
+  }
+
+  .map__text {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    max-width: 38ch;
+  }
+
+  .map__fallback {
+    font-size: 0.85rem;
+  }
+
+  .map__fallback a {
+    color: var(--color-sage-dark);
+    text-decoration: underline;
+  }
+
+  /* Sans JavaScript, le bouton ne peut rien faire : on ne montre que le lien. */
+  :global(html.no-js) .map__button {
+    display: none;
+  }
+</style>

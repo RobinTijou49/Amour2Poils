@@ -1,0 +1,110 @@
+---
+/**
+ * Gabarit de toutes les pages : métadonnées SEO, polices, en-tête et pied de page.
+ * Les polices sont auto-hébergées (paquets @fontsource-variable) plutôt que
+ * chargées depuis le CDN Google Fonts : pas de requête vers un tiers, donc
+ * pas de transfert d'adresse IP des visiteurs — et une page plus rapide.
+ */
+import "@fontsource-variable/quicksand";
+import "@fontsource-variable/nunito";
+import "@/styles/global.css";
+
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { site, contact } from "@/data/site";
+
+interface Props {
+  /** Titre de la page, sans le nom du site (ajouté automatiquement). */
+  title: string;
+  description: string;
+  /** Image de partage sur les réseaux sociaux (chemin absolu depuis /public). */
+  ogImage?: string;
+  /** `true` sur la page d'accueil, où le titre ne doit pas être suffixé. */
+  isHome?: boolean;
+  /** Retire la page de l'index des moteurs de recherche. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = "/og-image.jpg",
+  isHome = false,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = isHome ? title : `${title} — ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+
+/**
+ * Données structurées schema.org : aide Google à afficher les coordonnées,
+ * les horaires et la fiche établissement dans les résultats de recherche.
+ */
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.name,
+  description: site.description,
+  url: Astro.site?.href,
+  email: contact.email,
+  telephone: contact.phoneHref,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: contact.address.street,
+    postalCode: contact.address.postalCode,
+    addressLocality: contact.address.city,
+    addressCountry: contact.address.country,
+  },
+  openingHours: ["Mo-Fr 09:00-19:00", "Sa 09:00-13:00"],
+  areaServed: contact.address.city,
+};
+---
+
+<!doctype html>
+<html lang={site.lang} class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* Retire `no-js` immédiatement : permet au CSS de masquer les commandes
+        qui n'ont de sens qu'avec JavaScript, sans clignotement au chargement. */}
+    <script is:inline>
+      document.documentElement.classList.remove("no-js");
+    </script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#8a9a7e" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    ></script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#contenu">
+      Aller au contenu principal
+    </a>
+    <Header />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

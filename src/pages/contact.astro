@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import Section from "@/components/Section.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import ContactInfoCard from "@/components/ContactInfoCard.astro";
+import MapEmbed from "@/components/MapEmbed.astro";
+
+import heroImage from "@/assets/images/chien-regard.jpg";
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contactez-nous pour une pension, du petsitting ou un accompagnement en éducation canine positive."
+>
+  <Hero
+    image={heroImage}
+    imageAlt="Chien attentif regardant vers l'objectif"
+    eyebrow="✉️ Contact"
+    title="Parlons de votre compagnon"
+  >
+    <p>
+      Une question, une envie de réserver une pension ou de démarrer des séances
+      d'éducation ? Nous vous répondons avec plaisir.
+    </p>
+  </Hero>
+
+  <Section>
+    <div class="contact-grid">
+      <ContactForm />
+      <div>
+        <ContactInfoCard />
+        <MapEmbed />
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+  }
+</style>

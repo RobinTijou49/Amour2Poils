@@ -1,0 +1,47 @@
+---
+/** Bandeau d'appel à l'action en fin de page. */
+interface Props {
+  title: string;
+  text: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+const { title, text, ctaLabel, ctaHref } = Astro.props;
+---
+
+<div class="cta-banner">
+  <h2>{title}</h2>
+  <p>{text}</p>
+  <a href={ctaHref} class="btn btn--light">
+    {ctaLabel}
+  </a>
+</div>
+
+<style>
+  .cta-banner {
+    background: var(--color-sage);
+    color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .cta-banner h2 {
+    color: var(--color-white);
+    margin-bottom: 14px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+
+  .cta-banner p {
+    margin: 0 auto 28px;
+    color: var(--color-on-sage);
+    max-width: 560px;
+  }
+
+  @media (max-width: 720px) {
+    .cta-banner {
+      padding: 44px 24px;
+    }
+  }
+</style>

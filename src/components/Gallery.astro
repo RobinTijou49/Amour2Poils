@@ -1,0 +1,84 @@
+---
+/** Galerie en mosaïque. Les photos sont chargées paresseusement. */
+import { Image } from "astro:assets";
+import type { GalleryItem } from "@/data/galleries";
+
+interface Props {
+  items: readonly GalleryItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="gallery">
+  {items.map((item) => (
+    <li
+      class:list={["gallery__item", item.span && `gallery__item--${item.span}`]}
+    >
+      <Image
+        src={item.src}
+        alt={item.alt}
+        widths={[320, 640, 960]}
+        sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 33vw"
+        loading="lazy"
+      />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 18px;
+  }
+
+  .gallery__item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+  }
+
+  .gallery__item:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-soft-hover);
+  }
+
+  .gallery__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery__item--tall {
+    grid-row: span 2;
+  }
+
+  .gallery__item--wide {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 960px) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .gallery__item--wide {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery__item--wide,
+    .gallery__item--tall {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
+</style>

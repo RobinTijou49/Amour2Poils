@@ -1,0 +1,72 @@
+---
+/** Étapes numérotées. La numérotation est dérivée de l'ordre de la liste. */
+import type { Benefit } from "@/data/education";
+
+interface Props {
+  items: readonly Benefit[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="steps">
+  {items.map((item, index) => (
+    <li class="step">
+      <p class="step__num" aria-hidden="true">
+        {index + 1}
+      </p>
+      <h3>{item.title}</h3>
+      <p>{item.text}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .step__num {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--color-sage);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .step h3 {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  .step p:not(.step__num) {
+    color: var(--color-text-light);
+    font-size: 0.92rem;
+  }
+
+  @media (max-width: 960px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

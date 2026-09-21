@@ -1,0 +1,120 @@
+---
+/**
+ * Bandeau d'en-tête de page.
+ * L'image de fond est une vraie balise <img> optimisée par Astro et non un
+ * `background-image` CSS : le navigateur peut la précharger, servir l'AVIF/WebP
+ * et choisir la bonne taille selon l'écran. C'est l'élément LCP de la page,
+ * donc il est chargé en priorité.
+ */
+import { Image } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+  /** Décrit la photo pour les lecteurs d'écran. */
+  imageAlt: string;
+  eyebrow: string;
+  title: string;
+  /** `home` occupe presque tout l'écran, `page` est un bandeau plus court. */
+  variant?: "home" | "page";
+}
+
+const { image, imageAlt, eyebrow, title, variant = "page" } = Astro.props;
+---
+
+<section class:list={["hero", `hero--${variant}`]}>
+  <div class="hero__bg">
+    <Image
+      src={image}
+      alt={imageAlt}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+    />
+  </div>
+
+  <div class="hero__content">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero--home {
+    min-height: 88vh;
+  }
+
+  .hero--page {
+    min-height: 46vh;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Voile sombre : garantit un contraste suffisant du texte blanc
+     quelle que soit la photo placée derrière. */
+  .hero__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(61 58 52 / 35%) 0%,
+      rgb(61 58 52 / 55%) 100%
+    );
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    color: var(--color-white);
+    max-width: 700px;
+    padding: 60px var(--container-gutter);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero--page .hero__content {
+    max-width: 760px;
+  }
+
+  .hero__content :global(.eyebrow) {
+    color: #e8f0e2;
+  }
+
+  .hero__content h1 {
+    color: var(--color-white);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    margin-bottom: 20px;
+  }
+
+  .hero__content :global(p:not(.eyebrow)) {
+    font-size: 1.15rem;
+    margin-bottom: 32px;
+    color: var(--color-on-dark);
+  }
+
+  .hero__content :global(.hero-actions) {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

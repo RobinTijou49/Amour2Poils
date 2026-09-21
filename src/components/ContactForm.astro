@@ -1,0 +1,385 @@
+---
+/**
+ * Formulaire de contact.
+ *
+ * Amélioration progressive, en trois niveaux :
+ *  1. sans JavaScript, c'est un `<form method="post">` ordinaire et l'API
+ *     redirige vers /merci ;
+ *  2. le navigateur applique les contraintes natives (`required`, `pattern`,
+ *     `minlength`), dérivées du même schéma que le serveur ;
+ *  3. avec JavaScript, l'envoi se fait en arrière-plan et les erreurs
+ *     renvoyées par le serveur s'affichent sous chaque champ.
+ *
+ * Le schéma Zod n'est volontairement pas embarqué côté navigateur : il pèse
+ * 80 Ko pour dupliquer une validation que le serveur refait de toute façon.
+ * Les attributs HTML ci-dessous couvrent le retour immédiat, et le serveur
+ * reste la seule autorité.
+ */
+import { SERVICES, PHONE_PATTERN, LIMITS } from "@/lib/contact-schema";
+
+// `pattern` est implicitement ancré : on retire les ancres de la regex source.
+const phonePattern = PHONE_PATTERN.source.replace(/^\^|\$$/g, "");
+---
+
+<div class="contact-form">
+  <h2>Envoyez-nous un message</h2>
+
+  <!-- Annoncé par les lecteurs d'écran dès qu'il devient visible. -->
+  <p
+    class="form-status form-status--success"
+    id="form-success"
+    role="status"
+    hidden
+  >
+    Merci pour votre message ! Nous revenons vers vous très rapidement. 🐾
+  </p>
+
+  <!-- Sans JavaScript, l'API redirige vers cette ancre, révélée en CSS. -->
+  <p
+    class="form-status form-status--error"
+    id="formulaire-erreur"
+    role="alert"
+    hidden
+  >
+    L'envoi a échoué. Vérifiez les champs ci-dessous, ou joignez-nous par
+    téléphone.
+  </p>
+
+  <form id="contact-form" method="post" action="/api/contact">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">
+          Nom complet <abbr title="obligatoire">*</abbr>
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Votre nom"
+          autocomplete="name"
+          required
+          minlength={LIMITS.nameMin}
+          maxlength={LIMITS.nameMax}
+          aria-describedby="name-error"
+        />
+        <p class="field-error" id="name-error" aria-live="polite"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">
+          Téléphone <abbr title="obligatoire">*</abbr>
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="06 12 34 56 78"
+          autocomplete="tel"
+          required
+          pattern={phonePattern}
+          title="Format attendu : 06 12 34 56 78"
+          aria-describedby="phone-error"
+        />
+        <p class="field-error" id="phone-error" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">
+        Email <abbr title="obligatoire">*</abbr>
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="vous@email.com"
+        autocomplete="email"
+        required
+        maxlength={LIMITS.emailMax}
+        aria-describedby="email-error"
+      />
+      <p class="field-error" id="email-error" aria-live="polite"></p>
+    </div>
+
+    <div class="form-group">
+      <label for="service">
+        Service souhaité <abbr title="obligatoire">*</abbr>
+      </label>
+      <select
+        id="service"
+        name="service"
+        required
+        aria-describedby="service-error"
+      >
+        <option value="" selected disabled>
+          Sélectionnez un service
+        </option>
+        {Object.entries(SERVICES).map(([value, label]) => (
+          <option value={value}>{label}</option>
+        ))}
+      </select>
+      <p class="field-error" id="service-error" aria-live="polite"></p>
+    </div>
+
+    <div class="form-group">
+      <label for="message">
+        Votre message <abbr title="obligatoire">*</abbr>
+      </label>
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Parlez-nous de votre chien : race, âge, besoins, dates envisagées..."
+        required
+        minlength={LIMITS.messageMin}
+        maxlength={LIMITS.messageMax}
+        aria-describedby="message-error"
+      ></textarea>
+      <p class="field-error" id="message-error" aria-live="polite"></p>
+    </div>
+
+    {/* Piège à robots : invisible et hors du parcours au clavier. */}
+    <div class="honeypot" aria-hidden="true">
+      <label for="website">Ne pas remplir ce champ</label>
+      <input
+        type="text"
+        id="website"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <button type="submit" class="btn btn--primary btn--block">
+      Envoyer le message
+    </button>
+
+    <p class="form-note">
+      Les champs marqués d'un <abbr title="obligatoire">*</abbr> sont
+      obligatoires. Réponse sous 24 à 48h.
+    </p>
+  </form>
+</div>
+
+<script>
+  // Type seul : effacé à la compilation, donc rien n'est embarqué ici.
+  import type { FieldErrors } from "@/lib/contact-schema";
+
+  const form = document.querySelector<HTMLFormElement>("#contact-form");
+  const success = document.querySelector<HTMLElement>("#form-success");
+  const globalError = document.querySelector<HTMLElement>("#formulaire-erreur");
+  const submitButton = form?.querySelector<HTMLButtonElement>(
+    "button[type=submit]",
+  );
+
+  if (form && success && globalError && submitButton) {
+    const defaultLabel = submitButton.textContent ?? "Envoyer le message";
+
+    const errorSlot = (field: string) =>
+      document.querySelector<HTMLElement>("#" + field + "-error");
+
+    const clearErrors = () => {
+      globalError.hidden = true;
+      const controls = form.querySelectorAll<HTMLElement>(
+        "input, select, textarea",
+      );
+      for (const control of controls) {
+        control.removeAttribute("aria-invalid");
+        const slot = errorSlot(control.id);
+        if (slot) slot.textContent = "";
+      }
+    };
+
+    const showFieldErrors = (errors: FieldErrors) => {
+      let firstInvalid: HTMLElement | null = null;
+      for (const [field, message] of Object.entries(errors)) {
+        const slot = errorSlot(field);
+        if (slot) slot.textContent = message ?? "";
+        const control = form.elements.namedItem(field);
+        if (control instanceof HTMLElement) {
+          control.setAttribute("aria-invalid", "true");
+          if (!firstInvalid) firstInvalid = control;
+        }
+      }
+      firstInvalid?.focus();
+    };
+
+    const showGlobalError = (message: string) => {
+      globalError.textContent = message;
+      globalError.hidden = false;
+      globalError.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearErrors();
+      success.hidden = true;
+
+      // Les contraintes natives ont déjà filtré les erreurs évidentes ;
+      // le serveur tranche pour le reste.
+      const payload = Object.fromEntries(new FormData(form));
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Envoi en cours…";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (response.ok && result?.ok) {
+          form.reset();
+          success.hidden = false;
+          success.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        if (result?.errors) showFieldErrors(result.errors);
+        showGlobalError(
+          result?.message ?? "L'envoi a échoué. Merci de réessayer.",
+        );
+      } catch {
+        showGlobalError(
+          "Connexion impossible. Vérifiez votre réseau, puis réessayez.",
+        );
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = defaultLabel;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-form {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .contact-form h2 {
+    margin-bottom: 24px;
+  }
+
+  .form-status {
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .form-status--success {
+    background: var(--color-bg-alt);
+    border: 1.5px solid var(--color-sage);
+    color: var(--color-sage-dark);
+  }
+
+  .form-status--error {
+    background: #fdf0ef;
+    border: 1.5px solid var(--color-error);
+    color: var(--color-error);
+  }
+
+  /* Repli sans JavaScript : l'API redirige vers #formulaire-erreur,
+     ce qui suffit à révéler le message malgré l'attribut `hidden`. */
+  .form-status:target {
+    display: block;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 8px;
+  }
+
+  .form-group abbr {
+    text-decoration: none;
+    color: var(--color-brown-dark);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: var(--transition);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    background: var(--color-white);
+  }
+
+  .form-group :is(input, select, textarea)[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .field-error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--color-error);
+  }
+
+  .field-error:empty {
+    display: none;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form-note {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .contact-form {
+      padding: 28px 20px;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

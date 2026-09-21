@@ -1,0 +1,48 @@
+---
+/** Liste à puces illustrées (coche, cadenas, etc.). */
+interface Props {
+  items: readonly { readonly bullet: string; readonly text: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="feature-list">
+  {items.map((item) => (
+    <li>
+      <span class="bullet" aria-hidden="true">
+        {item.bullet}
+      </span>
+      <span>{item.text}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .feature-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--color-text);
+  }
+
+  .bullet {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-bg-alt);
+    color: var(--color-sage-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+</style>

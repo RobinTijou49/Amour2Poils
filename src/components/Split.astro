@@ -1,0 +1,83 @@
+---
+/** Bloc deux colonnes : texte d'un côté, photo de l'autre. */
+import { Image } from "astro:assets";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  /** Place la photo à gauche au lieu de la droite (alternance visuelle). */
+  reverse?: boolean;
+}
+
+const { eyebrow, title, image, imageAlt, reverse = false } = Astro.props;
+---
+
+<div class:list={["split", { "split--reverse": reverse }]}>
+  <div class="split__text">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <slot />
+  </div>
+
+  <Image
+    class="split__img"
+    src={image}
+    alt={imageAlt}
+    widths={[480, 720, 960]}
+    sizes="(max-width: 960px) 100vw, 560px"
+    loading="lazy"
+  />
+</div>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .split__img {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+  }
+
+  .split--reverse .split__text {
+    order: 2;
+  }
+
+  .split--reverse .split__img {
+    order: 1;
+  }
+
+  .split__text h2 {
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    margin-bottom: 18px;
+  }
+
+  .split__text :global(p:not(.eyebrow)) {
+    color: var(--color-text-light);
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 960px) {
+    .split {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .split--reverse .split__text,
+    .split--reverse .split__img {
+      order: initial;
+    }
+
+    .split__img {
+      height: 320px;
+    }
+  }
+</style>

@@ -1,0 +1,127 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import Section from "@/components/Section.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import ValueCard from "@/components/ValueCard.astro";
+import ServiceCard from "@/components/ServiceCard.astro";
+import TestimonialCard from "@/components/TestimonialCard.astro";
+import CtaBanner from "@/components/CtaBanner.astro";
+
+import { site } from "@/data/site";
+import { values, testimonials } from "@/data/home";
+
+import heroImage from "@/assets/images/hero-accueil.jpg";
+import pensionImage from "@/assets/images/pension-promenade.jpg";
+import educationImage from "@/assets/images/education-seance.jpg";
+---
+
+<BaseLayout
+  isHome
+  title={`${site.name} — ${site.tagline}`}
+  description={site.description}
+>
+  <Hero
+    variant="home"
+    image={heroImage}
+    imageAlt="Chien heureux en balade dans la nature"
+    eyebrow="🐾 Éducation positive · Pension · Petsitting"
+    title="Le bonheur de votre chien, notre priorité"
+  >
+    <p>
+      Une équipe passionnée et diplômée qui accompagne vos compagnons à quatre
+      pattes avec bienveillance, patience et professionnalisme — chez eux comme
+      chez nous.
+    </p>
+    <div class="hero-actions">
+      <a href="/pension" class="btn btn--light">
+        Découvrir la pension
+      </a>
+      <a href="/education" class="btn btn--primary">
+        Découvrir l'éducation
+      </a>
+    </div>
+  </Hero>
+
+  <Section>
+    <SectionHead
+      eyebrow="Qui sommes-nous"
+      title="Une relation de confiance avant tout"
+    >
+      <p>
+        Confier son chien, c'est confier un membre de la famille. C'est pourquoi
+        chaque accompagnement — qu'il s'agisse d'une garde ou d'une séance
+        d'éducation — repose sur l'écoute, le respect du rythme de l'animal et
+        une communication claire avec vous.
+      </p>
+    </SectionHead>
+
+    <ul class="grid grid--3 values">
+      {values.map((value) => (
+        <ValueCard icon={value.icon} title={value.title}>
+          {value.text}
+        </ValueCard>
+      ))}
+    </ul>
+  </Section>
+
+  <Section alt>
+    <SectionHead
+      eyebrow="Nos services"
+      title="Deux façons de prendre soin de votre chien"
+    >
+      <p>
+        Que vous partiez en voyage ou que vous souhaitiez renforcer votre
+        complicité au quotidien, nous avons une solution adaptée.
+      </p>
+    </SectionHead>
+
+    <ul class="grid grid--2">
+      <ServiceCard
+        title="🏡 Pension & Petsitting"
+        href="/pension"
+        image={pensionImage}
+        imageAlt="Promenade d'un chien en laisse sur un chemin"
+      >
+        Garde à domicile ou en pension familiale, promenades quotidiennes, jeux
+        et câlins : votre chien se sent comme à la maison, même en votre
+        absence.
+      </ServiceCard>
+
+      <ServiceCard
+        title="🎾 Éducation positive"
+        href="/education"
+        image={educationImage}
+        imageAlt="Séance d'éducation canine en extérieur"
+      >
+        Cours particuliers, collectifs, puppy classes et rééducation
+        comportementale, basés uniquement sur le renforcement positif.
+      </ServiceCard>
+    </ul>
+  </Section>
+
+  <Section>
+    <SectionHead eyebrow="Témoignages" title="Ce que disent les familles" />
+
+    <ul class="grid grid--3">
+      {testimonials.map((testimonial) => (
+        <TestimonialCard testimonial={testimonial} />
+      ))}
+    </ul>
+  </Section>
+
+  <Section>
+    <CtaBanner
+      title="Envie de rencontrer notre équipe ?"
+      text="Parlons de votre chien et de ses besoins autour d'un premier échange sans engagement."
+      ctaLabel="Nous contacter"
+      ctaHref="/contact"
+    />
+  </Section>
+</BaseLayout>
+
+<style>
+  .values {
+    margin-top: 50px;
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import Section from "@/components/Section.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import Split from "@/components/Split.astro";
+import FeatureList from "@/components/FeatureList.astro";
+import PriceCard from "@/components/PriceCard.astro";
+import Gallery from "@/components/Gallery.astro";
+import CtaBanner from "@/components/CtaBanner.astro";
+
+import { pricing, serviceFeatures, settingFeatures } from "@/data/pension";
+import { pensionGallery } from "@/data/galleries";
+
+import heroImage from "@/assets/images/hero-accueil.jpg";
+import gardeImage from "@/assets/images/pension-garde-domicile.jpg";
+import cadreImage from "@/assets/images/pension-cadre-jardin.jpg";
+---
+
+<BaseLayout
+  title="Pension & Petsitting"
+  description="Garde à domicile, pension familiale et promenades pour votre chien, dans un cadre sécurisé et chaleureux."
+>
+  <Hero
+    image={heroImage}
+    imageAlt="Chien détendu dans un jardin"
+    eyebrow="🏡 Pension & Petsitting"
+    title="Un cocon rassurant pour votre chien, même en votre absence"
+  >
+    <p>
+      Garde à domicile, pension familiale ou promenades : votre compagnon est
+      chouchouté dans un cadre sécurisé, à taille humaine.
+    </p>
+  </Hero>
+
+  <Section>
+    <Split
+      eyebrow="Le service"
+      title="Une garde sur-mesure, adaptée à votre chien"
+      image={gardeImage}
+      imageAlt="Chien accueilli chez lui pendant une visite de garde"
+    >
+      <p>
+        Chaque chien a ses habitudes, son caractère et son rythme. Avant toute
+        garde, nous organisons une rencontre pour apprendre à le connaître et
+        échanger avec vous sur ses besoins (alimentation, santé, sociabilité,
+        routines).
+      </p>
+      <p>
+        Pendant votre absence, il profite de promenades quotidiennes, de temps
+        de jeu, de repos et d'une présence attentive — comme s'il était chez
+        lui.
+      </p>
+      <FeatureList items={serviceFeatures} />
+    </Split>
+  </Section>
+
+  <Section alt>
+    <Split
+      reverse
+      eyebrow="Le cadre"
+      title="Un environnement sécurisé et confortable"
+      image={cadreImage}
+      imageAlt="Jardin clôturé où les chiens peuvent se dépenser"
+    >
+      <p>
+        Notre pension familiale se déroule dans un cadre clôturé, adapté aux
+        chiens de toutes tailles, avec un espace extérieur pour se dépenser et
+        un intérieur douillet pour se reposer.
+      </p>
+      <FeatureList items={settingFeatures} />
+    </Split>
+  </Section>
+
+  <Section>
+    <SectionHead eyebrow="Formules" title="Tarifs indicatifs">
+      <p>
+        Chaque situation étant différente, un devis personnalisé vous est
+        proposé après notre premier échange.
+      </p>
+    </SectionHead>
+
+    <ul class="grid grid--3 pricing">
+      {pricing.map((plan) => (
+        <PriceCard plan={plan} />
+      ))}
+    </ul>
+
+    <p class="pricing__footnote">
+      Tarifs à titre indicatif, susceptibles de varier selon la durée du séjour
+      et les besoins spécifiques de votre chien.
+    </p>
+  </Section>
+
+  <Section alt>
+    <SectionHead
+      eyebrow="En images"
+      title="Nos pensionnaires en pleine forme"
+    />
+    <Gallery items={pensionGallery} />
+  </Section>
+
+  <Section>
+    <CtaBanner
+      title="Prêt à confier votre chien en toute sérénité ?"
+      text="Contactez-nous pour organiser une première rencontre et obtenir un devis personnalisé."
+      ctaLabel="Réserver / Nous contacter"
+      ctaHref="/contact"
+    />
+  </Section>
+</BaseLayout>
+
+<style>
+  /* Marge haute pour laisser respirer le badge « Le plus demandé ». */
+  .pricing {
+    margin-top: 14px;
+  }
+
+  .pricing__footnote {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+  }
+</style>

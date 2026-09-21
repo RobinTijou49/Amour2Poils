@@ -1,0 +1,138 @@
+---
+import SocialLinks from "@/components/SocialLinks.astro";
+import { site, contact, mainNav, footerServiceLinks } from "@/data/site";
+
+const year = new Date().getFullYear();
+const { street, postalCode, city } = contact.address;
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <p class="footer-logo">
+          <span class="paw" aria-hidden="true">
+            🐾
+          </span>
+          {site.name}
+        </p>
+        <p>{site.description}</p>
+        <SocialLinks variant="footer" />
+      </div>
+
+      <nav class="footer-col" aria-label="Navigation du pied de page">
+        <h2>Navigation</h2>
+        <ul>
+          {mainNav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Nos services">
+        <h2>Services</h2>
+        <ul>
+          {footerServiceLinks.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="footer-col">
+        <h2>Contact</h2>
+        <address>
+          {street}
+          <br />
+          {`${postalCode} ${city}`}
+        </address>
+        <p>
+          <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+          <br />
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </p>
+      </div>
+    </div>
+
+    <p class="footer-bottom">
+      &copy; {year} {site.name} — Tous droits réservés.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-footer-bg);
+    color: var(--color-footer-text);
+    padding: 60px 0 24px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-white);
+    margin-bottom: 14px;
+  }
+
+  .footer-logo .paw {
+    color: var(--color-sage);
+  }
+
+  .footer-col h2 {
+    font-family: var(--font-heading);
+    color: var(--color-white);
+    font-size: 1rem;
+    margin-bottom: 18px;
+  }
+
+  .footer-col ul li {
+    margin-bottom: 10px;
+  }
+
+  .footer-col a:hover {
+    color: var(--color-white);
+    text-decoration: underline;
+  }
+
+  .footer-col p,
+  .footer-col address {
+    font-size: 0.92rem;
+    color: var(--color-footer-muted);
+    font-style: normal;
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgb(255 255 255 / 10%);
+    padding-top: 22px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-footer-faint);
+  }
+
+  @media (max-width: 960px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

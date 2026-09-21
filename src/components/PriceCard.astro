@@ -1,0 +1,136 @@
+---
+/** Carte tarifaire. Une seule carte de la grille doit porter `featured`. */
+import type { PriceCard } from "@/data/pension";
+
+interface Props {
+  plan: PriceCard;
+}
+
+const { plan } = Astro.props;
+---
+
+<li class:list={["price-card", { "price-card--featured": plan.featured }]}>
+  {plan.badge && <p class="price-card__badge">{plan.badge}</p>}
+
+  <h3>{plan.title}</h3>
+
+  <p class="price-card__price">
+    {plan.amount}
+    <span>{plan.unit}</span>
+  </p>
+
+  <p class="price-card__note">{plan.note}</p>
+
+  <ul class="price-card__features">
+    {plan.features.map((feature) => (
+      <li>{feature}</li>
+    ))}
+  </ul>
+
+  <a
+    href="/contact"
+    class:list={[
+      "btn",
+      "btn--block",
+      plan.featured ? "btn--light" : "btn--secondary",
+    ]}
+  >
+    Réserver<span class="visually-hidden"> — formule {plan.title}</span>
+  </a>
+</li>
+
+<style>
+  .price-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    position: relative;
+  }
+
+  .price-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-soft-hover);
+  }
+
+  .price-card--featured {
+    background: var(--color-sage);
+    color: var(--color-white);
+    transform: scale(1.04);
+  }
+
+  .price-card--featured:hover {
+    transform: scale(1.04) translateY(-6px);
+  }
+
+  .price-card--featured h3,
+  .price-card--featured .price-card__note {
+    color: var(--color-white);
+  }
+
+  .price-card__badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-brown);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .price-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+
+  .price-card__price {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin: 14px 0;
+  }
+
+  .price-card__price span {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .price-card__note {
+    color: var(--color-text-light);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .price-card__features {
+    text-align: left;
+    margin-bottom: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.94rem;
+  }
+
+  .price-card__features li::before {
+    content: "🐾";
+    margin-right: 8px;
+  }
+
+  @media (max-width: 720px) {
+    .price-card--featured,
+    .price-card--featured:hover {
+      transform: none;
+    }
+
+    .price-card--featured:hover {
+      transform: translateY(-6px);
+    }
+  }
+</style>

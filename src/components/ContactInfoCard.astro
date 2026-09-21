@@ -1,0 +1,126 @@
+---
+/** Coordonnées, horaires et réseaux sociaux de la page contact. */
+import SocialLinks from "@/components/SocialLinks.astro";
+import { contact, openingHours } from "@/data/site";
+
+const { street, postalCode, city } = contact.address;
+---
+
+<div class="info-panel">
+  <h2>Nos coordonnées</h2>
+
+  <div class="detail">
+    <p class="detail__icon" aria-hidden="true">
+      📍
+    </p>
+    <div>
+      <strong>Adresse</strong>
+      <address>{`${street}, ${postalCode} ${city}`}</address>
+    </div>
+  </div>
+
+  <div class="detail">
+    <p class="detail__icon" aria-hidden="true">
+      📞
+    </p>
+    <div>
+      <strong>Téléphone</strong>
+      <p>
+        <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="detail">
+    <p class="detail__icon" aria-hidden="true">
+      ✉️
+    </p>
+    <div>
+      <strong>Email</strong>
+      <p>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="detail">
+    <p class="detail__icon" aria-hidden="true">
+      🕐
+    </p>
+    <div>
+      <strong>Horaires</strong>
+      <ul class="hours">
+        {openingHours.map((slot) => (
+          <li>
+            <span>{slot.days}</span> : <span>{slot.hours}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="info-panel__social-title">Suivez-nous</h2>
+  <SocialLinks variant="card" />
+</div>
+
+<style>
+  .info-panel {
+    background: var(--color-bg-alt);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+
+  .info-panel h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .info-panel__social-title {
+    margin-top: 28px;
+  }
+
+  .detail {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+
+  .detail__icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .detail strong {
+    display: block;
+    font-family: var(--font-heading);
+    margin-bottom: 2px;
+  }
+
+  .detail p,
+  .detail address,
+  .hours {
+    color: var(--color-text-light);
+    font-size: 0.94rem;
+    font-style: normal;
+  }
+
+  .detail a:hover {
+    color: var(--color-sage-dark);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 720px) {
+    .info-panel {
+      padding: 26px 20px;
+    }
+  }
+</style>

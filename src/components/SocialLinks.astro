@@ -1,0 +1,80 @@
+---
+/**
+ * Liste des réseaux sociaux.
+ * Un lien encore réglé sur « # » est rendu comme texte inerte plutôt que
+ * comme lien mort : mieux pour l'accessibilité et pour le référencement.
+ */
+import { socialLinks } from "@/data/site";
+
+interface Props {
+  /** `footer` = pastilles sombres, `card` = pastilles claires. */
+  variant?: "footer" | "card";
+}
+
+const { variant = "card" } = Astro.props;
+---
+
+<ul class:list={["social", `social--${variant}`]}>
+  {socialLinks.map((link) => (
+    <li>
+      {link.href === "#" ? (
+        <span class="social__item" aria-hidden="true" title={link.label}>
+          {link.icon}
+        </span>
+      ) : (
+        <a
+          class="social__item"
+          href={link.href}
+          rel="noopener noreferrer me"
+          target="_blank"
+        >
+          <span aria-hidden="true">{link.icon}</span>
+          <span class="visually-hidden">{link.label} (nouvelle fenêtre)</span>
+        </a>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .social {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: var(--transition);
+  }
+
+  .social--card .social__item {
+    background: var(--color-white);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .social--card a.social__item:hover {
+    background: var(--color-sage);
+    transform: translateY(-3px);
+  }
+
+  .social--footer {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .social--footer .social__item {
+    width: 38px;
+    height: 38px;
+    background: rgb(255 255 255 / 8%);
+  }
+
+  .social--footer a.social__item:hover {
+    background: var(--color-sage);
+  }
+</style>

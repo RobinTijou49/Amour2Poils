@@ -1,0 +1,16 @@
+---
+/** Enveloppe de section : espacement vertical, fond alterné et conteneur centré. */
+interface Props {
+  /** Fond beige, utilisé une section sur deux. */
+  alt?: boolean;
+  class?: string;
+}
+
+const { alt = false, class: className } = Astro.props;
+---
+
+<section class:list={["section", { "section--alt": alt }, className]}>
+  <div class="container">
+    <slot />
+  </div>
+</section>

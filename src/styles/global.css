@@ -1,0 +1,298 @@
+/* ==========================================================================
+   Amour 2 Poils — fondations
+   Jetons de design, remise à zéro, typographie, mise en page et composants
+   partagés (boutons, titres de section). Les styles propres à un composant
+   vivent dans son propre fichier .astro, où Astro les isole automatiquement.
+   ========================================================================== */
+
+:root {
+  /* Couleurs */
+  --color-bg: #fdfcf9;
+  --color-bg-alt: #f5f1e8;
+  --color-sage: #8a9a7e;
+  --color-sage-dark: #6f7f64;
+  --color-brown: #a9825f;
+  --color-brown-dark: #8a6845;
+  --color-text: #3d3a34;
+  --color-text-light: #6b6559;
+  --color-white: #ffffff;
+  --color-border: #e6e0d4;
+  --color-footer-bg: #33362f;
+  --color-footer-text: #d8d4c8;
+  --color-footer-muted: #b9b5a8;
+  --color-footer-faint: #9c9888;
+  --color-on-dark: #f2efe8;
+  --color-on-sage: #eef3ea;
+  --color-error: #b3261e;
+
+  /* Typographie */
+  --font-heading: "Quicksand", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  /* Formes et profondeur */
+  --radius-md: 14px;
+  --radius-lg: 26px;
+  --shadow-soft: 0 10px 30px rgb(61 58 52 / 8%);
+  --shadow-soft-hover: 0 16px 40px rgb(61 58 52 / 14%);
+
+  /* Mouvement */
+  --transition: all 0.25s ease;
+
+  /* Gabarit */
+  --container-max: 1180px;
+  --container-gutter: 24px;
+  --header-height: 74px;
+}
+
+/* ---------- Remise à zéro ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Évite que les ancres passent sous l'en-tête collant. */
+  scroll-padding-top: calc(var(--header-height) + 16px);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+svg,
+iframe {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+/* ---------- Accessibilité ---------- */
+
+:focus-visible {
+  outline: 3px solid var(--color-brown);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Masque visuellement sans retirer du flux pour les lecteurs d'écran. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% -120%;
+  z-index: 2000;
+  padding: 12px 24px;
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  transition: translate 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+/* Respecte le réglage système « réduire les animations ». */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Gabarit ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-gutter);
+}
+
+.section {
+  padding: 90px 0;
+}
+
+.section--alt {
+  background: var(--color-bg-alt);
+}
+
+/* ---------- Titres de section ---------- */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--color-sage-dark);
+  margin-bottom: 14px;
+}
+
+/* ---------- Boutons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.98rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--primary {
+  background: var(--color-sage);
+  color: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-sage-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.btn--secondary {
+  background: transparent;
+  border-color: var(--color-brown);
+  color: var(--color-brown-dark);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--color-brown);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn--light {
+  background: var(--color-white);
+  color: var(--color-sage-dark);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn--light:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ---------- Grilles partagées ---------- */
+
+.grid {
+  display: grid;
+  gap: 28px;
+}
+
+.grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 34px;
+}
+
+.grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 960px) {
+  .grid--2,
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 60px 0;
+  }
+
+  .grid--2,
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: 1fr;
+  }
+}

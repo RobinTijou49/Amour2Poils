@@ -1,0 +1,33 @@
+---
+/** Titre centré d'une section : surtitre, titre et texte d'introduction. */
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<div class="section-head">
+  <p class="eyebrow">{eyebrow}</p>
+  <h2>{title}</h2>
+  <slot />
+</div>
+
+<style>
+  .section-head {
+    max-width: 640px;
+    margin: 0 auto 50px;
+    text-align: center;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    margin-bottom: 14px;
+  }
+
+  .section-head :global(p:not(.eyebrow)) {
+    color: var(--color-text-light);
+    font-size: 1.05rem;
+  }
+</style>

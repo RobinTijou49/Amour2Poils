@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import { mainNav } from "@/data/site";
+---
+
+<BaseLayout
+  noindex
+  title="Page introuvable"
+  description="Cette page n'existe pas ou a été déplacée."
+>
+  <Section>
+    <div class="not-found">
+      <p class="not-found__icon" aria-hidden="true">
+        🐕‍🦺
+      </p>
+      <h1>Cette page s'est échappée</h1>
+      <p>
+        La page que vous cherchez n'existe pas ou a changé d'adresse. Voici de
+        quoi retrouver votre chemin :
+      </p>
+      <ul class="not-found__links">
+        {mainNav.map((item) => (
+          <li>
+            <a href={item.href} class="btn btn--secondary">
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .not-found__icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  .not-found h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin-bottom: 16px;
+  }
+
+  .not-found p {
+    color: var(--color-text-light);
+  }
+
+  .not-found__links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+</style>

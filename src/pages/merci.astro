@@ -1,0 +1,78 @@
+---
+/**
+ * Page de confirmation affichée après l'envoi du formulaire quand le
+ * visiteur n'a pas JavaScript. Volontairement retirée de l'index des moteurs
+ * de recherche : elle n'a de sens qu'à la suite d'un envoi.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import { contact } from "@/data/site";
+---
+
+<BaseLayout
+  noindex
+  title="Message envoyé"
+  description="Votre message a bien été envoyé à Amour 2 Poils."
+>
+  <Section>
+    <div class="thanks">
+      <p class="thanks__icon" aria-hidden="true">
+        🐾
+      </p>
+      <h1>Message bien reçu !</h1>
+      <p>
+        Merci de nous avoir écrit. Nous revenons vers vous sous 24 à 48 heures.
+        Pour une demande urgente, appelez-nous au
+        <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>.
+      </p>
+      <div class="thanks__actions">
+        <a href="/" class="btn btn--primary">
+          Retour à l'accueil
+        </a>
+        <a href="/pension" class="btn btn--secondary">
+          Découvrir la pension
+        </a>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .thanks__icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  .thanks h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin-bottom: 16px;
+  }
+
+  .thanks p {
+    color: var(--color-text-light);
+  }
+
+  .thanks a {
+    color: var(--color-sage-dark);
+    text-decoration: underline;
+  }
+
+  .thanks__actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .thanks__actions a {
+    text-decoration: none;
+  }
+</style>
