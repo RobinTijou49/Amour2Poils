@@ -1,0 +1,27 @@
+# build
+dist/
+.output/
+.vercel/
+.netlify/
+
+# dépendances
+node_modules/
+
+# généré par Astro
+.astro/
+
+# environnement
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+
+# système / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
